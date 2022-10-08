@@ -1,6 +1,9 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+hparams/lwd.csv 
+hparams/steps.csv 
+README.md 
 *$py.class
 
 # C extensions
@@ -46,6 +49,7 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
+LPGNN.png 
 *.cover
 *.py,cover
 .hypothesis/
