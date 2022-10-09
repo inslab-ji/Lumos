@@ -1,5 +1,22 @@
 import numpy as np
 import random
+import argparse
+from torch_geometric.utils import sort_edge_index
+import torch_geometric.transforms as T
+import pickle
+
+
+def neighbours(edges, num_nodes):
+    src, tag = edges
+    n = []
+    si = 0
+    for i in range(num_nodes):
+        l = []
+        while si < len(src) and src[si] == i:
+            l.append(int(tag[si]))
+            si += 1
+        n.append(l)
+    return n
 
 
 def init(neighbours):
@@ -39,3 +56,24 @@ def mcmc(T, x0):
             x = newx
     x = [list(i) for i in x]
     return x
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--dataset', type=str, default='Facebook')
+parser.add_argument('--mcmcepochs', type=int, default=10)
+args = parser.parse_args()
+if args.dataset == "Facebook":
+    from torch_geometric.datasets import FacebookPagePage
+    dataset = FacebookPagePage("./facebook", transform=T.NormalizeFeatures())
+    data = dataset[0]
+else:
+    from torch_geometric.datasets import LastFMAsia
+    dataset = LastFMAsia("./lastfm", transform=T.NormalizeFeatures())
+    data = dataset[0]
+edge_index = sort_edge_index(data.edge_index)
+neighs = neighbours(edge_index, data.num_nodes)
+init_s = init(neighs)
+final_s = mcmc(args.mcmcepochs, init_s)
+with open("./"+args.dataset+"/solution.pck", "wb") as file:
+    pickle.dump(final_s, file)
+
