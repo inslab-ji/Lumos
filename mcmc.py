@@ -60,7 +60,7 @@ def mcmc(T, x0):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset', type=str, default='Facebook')
-parser.add_argument('--mcmcepochs', type=int, default=10)
+parser.add_argument('--mcmcepochs', type=int, default=100000)
 args = parser.parse_args()
 if args.dataset == "Facebook":
     from torch_geometric.datasets import FacebookPagePage
